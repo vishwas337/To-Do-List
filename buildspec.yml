@@ -1,0 +1,19 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.x
+    commands:
+      - pip install -r requirements.txt
+  build:
+    commands:
+      - echo "Running tests..."
+      - python -m unittest test_monitor.py
+      - echo "Building script..."
+      - zip -r ec2_monitor.zip monitor_ec2.py requirements.txt
+  post_build:
+    commands:
+      - aws s3 cp ec2_monitor.zip s3://mypyproject/ec2_monitor.zip
+artifacts:
+  files:
+    - ec2_monitor.zip
